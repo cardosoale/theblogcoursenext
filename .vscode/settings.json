@@ -13,6 +13,13 @@
   "editor.fontLigatures": true,
   "editor.fontFamily": "Fira Code",
   "editor.stickyScroll.enabled": true,
+  "code-runner.clearPreviousOutput": true,
+  "code-runner.ignoreSelection": true,
+  "code-runner.runInTerminal": true,
+  "code-runner.executorMap": {
+    "typescript": "clear; npx tsx"
+  },
+
   // 🛠 Formatação e Lint
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.formatOnSave": true,
@@ -33,6 +40,5 @@
   },
   "[html]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
-
+  }
 }

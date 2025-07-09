@@ -7,7 +7,7 @@ type PostImageCoverProps = {
   linkProps: React.ComponentProps<typeof Link>;
 };
 
-export function PostImageCover({ imageProps, linkProps }: PostImageCoverProps) {
+export function PostCoverImage({ imageProps, linkProps }: PostImageCoverProps) {
   return (
     <Link
       {...linkProps}

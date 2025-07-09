@@ -1,11 +1,9 @@
 import { Container } from '@/components/Container';
 import { Header } from '@/components/Header';
-import { PostImageCover } from '@/components/PostCoverImage';
 import { PostHeading } from '@/components/PostHeading';
 import { PostsList } from '@/components/PostsLists';
 import { SpinLoader } from '@/components/SpinLoader';
-import Image from 'next/image';
-import Link from 'next/link';
+import { PostCoverImage } from '@/components/PostCoverImage';
 import { Suspense } from 'react';
 
 export default function HomePage() {
@@ -14,7 +12,7 @@ export default function HomePage() {
       <Header />
 
       <section className='grid grid-cols-1 gap-8 mb-16 sm:grid-cols-2 group'>
-        <PostImageCover
+        <PostCoverImage
           linkProps={{
             href: '#',
           }}

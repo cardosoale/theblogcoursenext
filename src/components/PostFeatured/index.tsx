@@ -1,5 +1,5 @@
 import { postRepository } from '@/repositories/post';
-import { PostCard } from '../PostCard';
+import { PostSummary } from '../PostSummary';
 import { PostCoverImage } from '../PostCoverImage';
 
 export async function PostFeatured() {
@@ -19,7 +19,13 @@ export async function PostFeatured() {
           priority: true,
         }}
       />
-      <PostCard post={featuredPost} headingLevel='h1' />
+      <PostSummary
+        createdAt={featuredPost.createdAt}
+        title={featuredPost.title}
+        excerpt={featuredPost.excerpt}
+        postLink={`/post/${featuredPost.slug}`}
+        headingLevel='h1'
+      />
     </section>
   );
 }

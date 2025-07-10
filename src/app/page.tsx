@@ -1,12 +1,8 @@
 import { Container } from '@/components/Container';
 import { Header } from '@/components/Header';
-import { PostHeading } from '@/components/PostHeading';
-import { PostsList } from '@/components/PostsLists';
+import { PostsList } from '@/components/PostsList';
 import { SpinLoader } from '@/components/SpinLoader';
-import { PostCoverImage } from '@/components/PostCoverImage';
 import { Suspense } from 'react';
-import { PostCard } from '@/components/PostCard';
-import { postRepository } from '@/repositories/post';
 import { PostFeatured } from '@/components/PostFeatured';
 
 export default async function HomePage() {

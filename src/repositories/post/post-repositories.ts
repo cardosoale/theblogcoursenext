@@ -1,6 +1,6 @@
 import { PostModel } from '@/models/post/post-model';
 
 export interface PostRepository {
-  findall(): Promise<PostModel[]>;
+  findallPublic(): Promise<PostModel[]>;
   findById(id: string): Promise<PostModel>;
 }

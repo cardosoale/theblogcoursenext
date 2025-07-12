@@ -3,7 +3,7 @@ import { PostCoverImage } from '../PostCoverImage';
 import { PostSummary } from '../PostSummary';
 
 export async function PostsList() {
-  const posts = await postRepository.findall();
+  const posts = await postRepository.findallPublic();
 
   return (
     <div className='grid grid-cols-1 gap-8  sm:grid-cols-2 lg:grid-cols-3'>

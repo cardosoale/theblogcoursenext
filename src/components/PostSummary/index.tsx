@@ -5,13 +5,13 @@ type PostSummaryProps = {
   createdAt: string;
   title: string;
   excerpt: string;
-  headingLevel?: 'h1' | 'h2';
+  postHeading?: 'h1' | 'h2';
   postLink: string;
 };
 
 export function PostSummary({
   postLink,
-  headingLevel = 'h2',
+  postHeading: headingLevel = 'h2',
   createdAt,
   title,
   excerpt,

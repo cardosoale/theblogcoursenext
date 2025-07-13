@@ -24,7 +24,7 @@ export async function PostFeatured() {
         title={post.title}
         excerpt={post.excerpt}
         postLink={`/post/${post.slug}`}
-        headingLevel='h1'
+        postHeading='h1'
       />
     </section>
   );

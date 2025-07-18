@@ -13,11 +13,11 @@ export function PostHeading({
   as: Tag = 'h2',
 }: PostHeadingProps) {
   const headingClassesMap = {
-    h1: 'sm:text-4xl font-extrabold',
-    h2: 'font-bold',
+    h1: 'text-2xl/tight sm:text-4xl font-extrabold',
+    h2: 'text-2xl/tight font-bold',
   };
 
-  const commonClasses = 'text-2xl/tight';
+  const commonClasses = '';
 
   return (
     <Tag className={clsx(headingClassesMap[Tag], commonClasses)}>

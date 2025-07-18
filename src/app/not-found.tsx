@@ -3,7 +3,7 @@ import clsx from 'clsx';
 export default function NotFoundPage() {
   return (
     <>
-      <title>Pagina não encontrada</title>
+      <title>Página não encontrada</title>
       <div
         className={clsx(
           'min-h-[320px] bg-slate-900 text-slate-100',

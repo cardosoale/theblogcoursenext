@@ -22,7 +22,9 @@ export default function RootLayout({ children }: Readonly<RootLayoutProps>) {
       <body>
         <Container>
           <Header />
+
           {children}
+
           <Footer />
         </Container>
       </body>

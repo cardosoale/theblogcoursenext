@@ -1,5 +1,5 @@
 import { PostModel } from '@/models/post/post-model';
-import { PostRepository } from './post-repositories';
+import { PostRepository } from './post-repository';
 import { resolve } from 'path';
 import { readFile } from 'fs/promises';
 
@@ -11,8 +11,7 @@ const JSON_POSTS_FILE_PATH = resolve(
   'seed',
   'posts.json',
 );
-
-const SIMULATE_WAIT_IN_MS = 0;
+const SIMULATE_WAIT_IN_MS = 5000;
 
 export class JsonPostRepository implements PostRepository {
   private async simulateWait() {
@@ -27,31 +26,30 @@ export class JsonPostRepository implements PostRepository {
     const { posts } = parsedJson;
     return posts;
   }
-  async findallPublic(): Promise<PostModel[]> {
+
+  async findAllPublic(): Promise<PostModel[]> {
     await this.simulateWait();
 
+    console.log('\n', 'findAllPublic', '\n');
+
     const posts = await this.readFromDisk();
-    return posts.filter(posts => posts.published);
+    return posts.filter(post => post.published);
   }
 
   async findById(id: string): Promise<PostModel> {
-    await this.simulateWait();
-
-    const posts = await this.findallPublic();
+    const posts = await this.findAllPublic();
     const post = posts.find(post => post.id === id);
 
-    if (!post) throw new Error('Post(id) não encontrado');
+    if (!post) throw new Error('Post não encontrado para ID');
 
     return post;
   }
 
   async findBySlug(slug: string): Promise<PostModel> {
-    await this.simulateWait();
-
-    const posts = await this.findallPublic();
+    const posts = await this.findAllPublic();
     const post = posts.find(post => post.slug === slug);
 
-    if (!post) throw new Error('Post(slug) não encontrado');
+    if (!post) throw new Error('Post não encontrado para slug');
 
     return post;
   }

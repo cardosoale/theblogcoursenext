@@ -4,7 +4,7 @@
 // (async () => {
 //   const posts = await drizzleDb.select().from(postsTable);
 
-//   posts.map(post => {
+//   posts.forEach(post => {
 //     console.log(post.slug);
 //   });
 // })();

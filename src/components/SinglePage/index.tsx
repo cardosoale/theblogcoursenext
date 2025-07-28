@@ -1,4 +1,4 @@
-import { findPostBySlugCached } from '@/lib/post/queries';
+import { findPostBySlugCached } from '@/lib/post/queries/public';
 
 type SinglePostProps = {
   slug: string;

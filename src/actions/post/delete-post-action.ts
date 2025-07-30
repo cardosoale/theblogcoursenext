@@ -1,7 +1,10 @@
 'use server';
 
-export async function deletePostAction(formdata: FormData) {
-  const id = formdata.get('id');
+import { asyncDelay } from '@/utils/async-delay';
+import { logColor } from '@/utils/log-color';
 
-  console.log('' + id);
+export async function deletePostAction(id: string) {
+  await asyncDelay(2000);
+  logColor('' + id);
+  return id;
 }

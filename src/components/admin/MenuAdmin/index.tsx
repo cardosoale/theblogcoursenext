@@ -25,8 +25,11 @@ export function MenuAdmin() {
     'flex flex-col  mb-8',
     'sm:flex-row sm:flex-wrap',
     !isOpen && 'h-10',
+    isOpen && 'min-w-full',
     !isOpen && 'overflow-hidden',
     'sm:overflow-visible sm:h-auto',
+    'sm:min-w-full',
+    'w-12',
   );
   const linkClasses = clsx(
     '[&>svg]:w-[16px] [&>svg]:h-[16px] px-4',
@@ -50,12 +53,14 @@ export function MenuAdmin() {
         {!isOpen && (
           <>
             <MenuIcon />
+            {/* Menu */}
           </>
         )}
 
         {isOpen && (
           <>
             <CircleXIcon />
+            Fechar
           </>
         )}
       </button>

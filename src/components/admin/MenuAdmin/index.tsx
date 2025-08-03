@@ -24,10 +24,8 @@ export function MenuAdmin() {
     'bg-slate-900 text-slate-100 rounded-lg',
     'flex flex-col  mb-8',
     'sm:flex-row sm:flex-wrap',
-    'transition',
     !isOpen && 'h-10',
     !isOpen && 'overflow-hidden',
-    !isOpen && 'w-12',
     'sm:overflow-visible sm:h-auto',
   );
   const linkClasses = clsx(

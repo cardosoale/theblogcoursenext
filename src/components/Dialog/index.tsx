@@ -1,6 +1,8 @@
 'use client';
 
 import clsx from 'clsx';
+import { Button } from '../Button';
+import { Trash2Icon } from 'lucide-react';
 
 type DialogProps = {
   isVisible?: boolean;
@@ -52,31 +54,18 @@ export function Dialog({
           {content}
         </div>
         <div className='flex items-center justify-around'>
-          <button
-            className={clsx(
-              'bg-slate-300 hover:bg-slate-400 transition text-slate-900',
-              'flex items-center justify-center',
-              'py-2 px-4 rounded-lg cursor-pointer',
-              'disabled:bg-slate-200 disabled:text-slate-400 disabled:cursor-not-allowed',
-            )}
+          <Button
+            variant='ghost'
             autoFocus
             onClick={handleCancel}
             disabled={disabled}
           >
             Cancelar
-          </button>
-          <button
-            className={clsx(
-              'bg-red-500 hover:bg-red-600 transition text-red-50',
-              'flex items-center justify-center',
-              'py-2 px-4 rounded-lg cursor-pointer',
-              'disabled:bg-slate-200 disabled:text-slate-400 disabled:cursor-not-allowed',
-            )}
-            onClick={onConfirm}
-            disabled={disabled}
-          >
+          </Button>
+          <Button variant='danger' onClick={onConfirm} disabled={disabled}>
+            <Trash2Icon />
             Deletar
-          </button>
+          </Button>
         </div>
       </div>
     </div>

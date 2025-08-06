@@ -1,5 +1,6 @@
 'use client';
 
+import { ImageUploader } from '@/app/admin/ImageUploader';
 import { Button } from '@/components/Button';
 import { InputCheckbox } from '@/components/InputCheckBox';
 import { InputText } from '@/components/InputText';
@@ -12,6 +13,7 @@ export function ManagePostForm() {
   return (
     <form action='' className='mb-16'>
       <div className='flex flex-col gap-6'>
+        <ImageUploader />
         <InputText
           labelText='Nome'
           placeholder='Digite seu nome'

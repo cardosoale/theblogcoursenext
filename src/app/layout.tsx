@@ -19,7 +19,7 @@ type RootLayoutProps = {
 
 export default function RootLayout({ children }: Readonly<RootLayoutProps>) {
   return (
-    <html lang='pt-BR'>
+    <html lang='pt-BR' data-color-mode='light'>
       <body>
         <Container>
           <Header />

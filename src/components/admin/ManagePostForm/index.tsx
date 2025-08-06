@@ -1,6 +1,6 @@
 'use client';
 
-import { ImageUploader } from '@/app/admin/ImageUploader';
+import { ImageUploader } from '@/components/admin/ImageUploader';
 import { Button } from '@/components/Button';
 import { InputCheckbox } from '@/components/InputCheckBox';
 import { InputText } from '@/components/InputText';

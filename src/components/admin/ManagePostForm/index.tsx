@@ -1,58 +1,102 @@
 'use client';
 
+import { createPostAction } from '@/actions/post/create-post-action';
 import { ImageUploader } from '@/components/admin/ImageUploader';
 import { Button } from '@/components/Button';
 import { InputCheckbox } from '@/components/InputCheckBox';
 import { InputText } from '@/components/InputText';
 import { MarkdownEditor } from '@/components/MarkdownEditor';
-import { useState } from 'react';
+import { PublicPost } from '@/dto/post/dto';
+import { useActionState, useEffect, useState } from 'react';
 
-export function ManagePostForm() {
-  const [contentValue, setContentValue] = useState('');
+type ManagePostFormProps = {
+  publicPost?: PublicPost;
+};
+
+export function ManagePostForm({ publicPost }: ManagePostFormProps) {
+  const [contentValue, setContentValue] = useState(publicPost?.content || '');
+
+  const initialState = {
+    numero: 0,
+  };
+
+  const [state, action, isPeding] = useActionState(
+    createPostAction,
+    initialState,
+  );
+
+  useEffect(() => {
+    console.log(state.numero);
+  }, [state.numero]);
 
   return (
-    <form action='' className='mb-16'>
+    <form action={action} className='mb-16'>
       <div className='flex flex-col gap-6'>
-        <ImageUploader />
         <InputText
-          labelText='Nome'
-          placeholder='Digite seu nome'
-          type='password'
+          labelText='ID'
+          name='id'
+          placeholder='ID gerado automaticamente'
+          type='text'
+          defaultValue={publicPost?.id || ''}
+          readOnly
         />
-        <InputText labelText='Sobrenome' placeholder='Digite seu sobrenome' />
-
-        <InputCheckbox labelText='Sobrenome' />
 
         <InputText
-          disabled
-          labelText='Sobrenome'
-          placeholder='Digite seu sobrenome'
-          defaultValue='Olá mundo'
+          labelText='Slug'
+          name='slug'
+          placeholder='Slug gerada automaticamente'
+          type='text'
+          defaultValue={publicPost?.slug || ''}
+          readOnly
+        />
+
+        <InputText
+          labelText='Autor'
+          name='author'
+          placeholder='Digite o nome do autor'
+          type='text'
+          defaultValue={publicPost?.author || ''}
+        />
+
+        <InputText
+          labelText='Título'
+          name='title'
+          placeholder='Digite o título'
+          type='text'
+          defaultValue={publicPost?.title || ''}
+        />
+
+        <InputText
+          labelText='Excerto'
+          name='excerpt'
+          placeholder='Digite o resumo'
+          type='text'
+          defaultValue={publicPost?.excerpt || ''}
         />
 
         <MarkdownEditor
           labelText='Conteúdo'
-          disabled={false}
-          textAreaName='content'
           value={contentValue}
           setValue={setContentValue}
+          textAreaName='content'
+          disabled={false}
         />
 
+        <ImageUploader />
+
         <InputText
-          disabled
-          labelText='Sobrenome'
-          placeholder='Digite seu sobrenome'
+          labelText='URL da imagem de capa'
+          name='coverImageUrl'
+          placeholder='Digite a url da imagem'
+          type='text'
+          defaultValue={publicPost?.coverImageUrl || ''}
         />
-        <InputText
-          labelText='Sobrenome'
-          placeholder='Digite seu sobrenome'
-          readOnly
-        />
-        <InputText
-          labelText='Sobrenome'
-          placeholder='Digite seu sobrenome'
-          defaultValue='Olá mundo'
-          readOnly
+
+        <InputCheckbox
+          labelText='Publicar?'
+          name='published'
+          type='checkbox'
+          defaultChecked={publicPost?.published || false}
         />
 
         <div className='mt-4'>

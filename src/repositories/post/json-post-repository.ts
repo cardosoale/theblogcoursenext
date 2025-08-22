@@ -1,83 +1,101 @@
 import { PostModel } from '@/models/post/post-model';
 import { PostRepository } from './post-repository';
-import { drizzleDb } from '@/db/drizzle';
-import { asyncDelay } from '@/utils/async-delay';
+import { resolve } from 'path';
+import { readFile, writeFile } from 'fs/promises';
 import { SIMULATE_WAIT_IN_MS } from '@/lib/constants';
-import { postsTable } from '@/db/drizzle/schemas';
-import { eq } from 'drizzle-orm';
 
-export class DrizzlePostRepository implements PostRepository {
-  async findAllPublic(): Promise<PostModel[]> {
-    await asyncDelay(SIMULATE_WAIT_IN_MS, true);
+const ROOT_DIR = process.cwd();
+const JSON_POSTS_FILE_PATH = resolve(
+  ROOT_DIR,
+  'src',
+  'db',
+  'seed',
+  'posts.json',
+);
 
-    const posts = await drizzleDb.query.posts.findMany({
-      orderBy: (posts, { desc }) => desc(posts.createdAt),
-      where: (posts, { eq }) => eq(posts.published, true),
-    });
+export class JsonPostRepository implements PostRepository {
+  private async simulateWait() {
+    if (SIMULATE_WAIT_IN_MS <= 0) return;
 
+    await new Promise(resolve => setTimeout(resolve, SIMULATE_WAIT_IN_MS));
+  }
+
+  private async readFromDisk(): Promise<PostModel[]> {
+    const jsonContent = await readFile(JSON_POSTS_FILE_PATH, 'utf-8');
+    const parsedJson = JSON.parse(jsonContent);
+    const { posts } = parsedJson;
     return posts;
   }
 
-  async findBySlugPublic(slug: string): Promise<PostModel> {
-    await asyncDelay(SIMULATE_WAIT_IN_MS, true);
+  private async writeToDisk(posts: PostModel[]): Promise<void> {
+    const jsonToString = JSON.stringify({ posts }, null, 2);
+    await writeFile(JSON_POSTS_FILE_PATH, jsonToString, 'utf-8');
+  }
 
-    const post = await drizzleDb.query.posts.findFirst({
-      where: (posts, { eq, and }) =>
-        and(eq(posts.published, true), eq(posts.slug, slug)),
-    });
+  async findAllPublic(): Promise<PostModel[]> {
+    await this.simulateWait();
 
-    if (!post) throw new Error('Post não encontrado para slug');
-
-    return post;
+    const posts = await this.readFromDisk();
+    return posts.filter(post => post.published);
   }
 
   async findAll(): Promise<PostModel[]> {
-    await asyncDelay(SIMULATE_WAIT_IN_MS, true);
+    await this.simulateWait();
 
-    const posts = await drizzleDb.query.posts.findMany({
-      orderBy: (posts, { desc }) => desc(posts.createdAt),
-    });
-
+    const posts = await this.readFromDisk();
     return posts;
   }
 
   async findById(id: string): Promise<PostModel> {
-    await asyncDelay(SIMULATE_WAIT_IN_MS, true);
-
-    const post = await drizzleDb.query.posts.findFirst({
-      where: (posts, { eq }) => eq(posts.id, id),
-    });
+    const posts = await this.findAllPublic();
+    const post = posts.find(post => post.id === id);
 
     if (!post) throw new Error('Post não encontrado para ID');
 
     return post;
   }
 
-  async create(post: PostModel): Promise<PostModel> {
-    const postExists = await drizzleDb.query.posts.findFirst({
-      where: (posts, { or, eq }) =>
-        or(eq(posts.id, post.id), eq(posts.slug, post.slug)),
-      columns: { id: true },
-    });
+  async findBySlugPublic(slug: string): Promise<PostModel> {
+    const posts = await this.findAllPublic();
+    const post = posts.find(post => post.slug === slug);
 
-    if (!!postExists) {
-      throw new Error('Post com ID ou Slug já existe na base de dados');
+    if (!post) throw new Error('Post não encontrado para slug');
+
+    return post;
+  }
+
+  async create(post: PostModel): Promise<PostModel> {
+    const posts = await this.findAll();
+
+    if (!post.id || !post.slug) {
+      throw new Error('Post sem ID ou Slug');
     }
 
-    await drizzleDb.insert(postsTable).values(post);
+    const idOrSlugExist = posts.find(
+      savedPost => savedPost.id === post.id || savedPost.slug === post.slug,
+    );
+
+    if (idOrSlugExist) {
+      throw new Error('ID ou Slug devem ser únicos');
+    }
+
+    posts.push(post);
+    await this.writeToDisk(posts);
+
     return post;
   }
 
   async delete(id: string): Promise<PostModel> {
-    const post = await drizzleDb.query.posts.findFirst({
-      where: (posts, { eq }) => eq(posts.id, id),
-    });
+    const posts = await this.findAll();
+    const postIndex = posts.findIndex(p => p.id === id);
 
-    if (!post) {
+    if (postIndex < 0) {
       throw new Error('Post não existe');
     }
 
-    await drizzleDb.delete(postsTable).where(eq(postsTable.id, id));
+    const post = posts[postIndex];
+    posts.splice(postIndex, 1);
+    await this.writeToDisk(posts);
 
     return post;
   }
@@ -86,32 +104,21 @@ export class DrizzlePostRepository implements PostRepository {
     id: string,
     newPostData: Omit<PostModel, 'id' | 'slug' | 'createdAt' | 'updatedAt'>,
   ): Promise<PostModel> {
-    const oldPost = await drizzleDb.query.posts.findFirst({
-      where: (posts, { eq }) => eq(posts.id, id),
-    });
+    const posts = await this.findAll();
+    const postIndex = posts.findIndex(p => p.id === id);
+    const savedPost = posts[postIndex];
 
-    if (!oldPost) {
+    if (postIndex < 0) {
       throw new Error('Post não existe');
     }
 
-    const updatedAt = new Date().toISOString();
-    const postData = {
-      author: newPostData.author,
-      content: newPostData.content,
-      coverImageUrl: newPostData.coverImageUrl,
-      excerpt: newPostData.excerpt,
-      published: newPostData.published,
-      title: newPostData.title,
-      updatedAt,
+    const newPost = {
+      ...savedPost,
+      ...newPostData,
+      updatedAt: new Date().toISOString(),
     };
-    await drizzleDb
-      .update(postsTable)
-      .set(postData)
-      .where(eq(postsTable.id, id));
-
-    return {
-      ...oldPost,
-      ...postData,
-    };
+    posts[postIndex] = newPost;
+    await this.writeToDisk(posts);
+    return newPost;
   }
 }

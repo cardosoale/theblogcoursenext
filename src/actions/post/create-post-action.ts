@@ -12,6 +12,7 @@ import { v4 as uuidV4 } from 'uuid';
 type CreatePostActionState = {
   formState: PublicPost;
   errors: string[];
+  sucess?: string;
 };
 
 export async function createPostAction(
@@ -61,5 +62,5 @@ export async function createPostAction(
   }
 
   revalidateTag('posts');
-  redirect(`/admin/post/${newPost.id}`);
+  redirect(`/admin/post/${newPost.id}?created=1`);
 }

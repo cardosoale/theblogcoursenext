@@ -1,10 +1,8 @@
 'use server';
-
-import { drizzleDb } from '@/db/drizzle';
-import { postsTable } from '@/db/drizzle/schemas';
 import { makePartialPublicPost, PublicPost } from '@/dto/post/dto';
 import { PostCreateSchema } from '@/lib/post/validations';
 import { PostModel } from '@/models/post/post-model';
+import { postRepository } from '@/repositories/post';
 import { getZodErrorMessages } from '@/utils/get-zod-error-messages';
 import { makeSlugFromText } from '@/utils/make-slug-from-text';
 import { revalidateTag } from 'next/cache';
@@ -47,10 +45,21 @@ export async function createPostAction(
     slug: makeSlugFromText(validPostData.title),
   };
 
+  try {
+    await postRepository.create(newPost);
+  } catch (e: unknown) {
+    if (e instanceof Error) {
+      return {
+        formState: newPost,
+        errors: [e.message],
+      };
+    }
+    return {
+      formState: newPost,
+      errors: ['Erro desconhecido'],
+    };
+  }
 
-  // TODO: mover este método para o repositório
-  await drizzleDb.insert(postsTable).values(newPost)
-
-  revalidateTag('posts')
-  redirect(`/admin/post/${newPost.id}`)
+  revalidateTag('posts');
+  redirect(`/admin/post/${newPost.id}`);
 }

@@ -12,7 +12,7 @@ import { v4 as uuidV4 } from 'uuid';
 type CreatePostActionState = {
   formState: PublicPost;
   errors: string[];
-  sucess?: string;
+  success?: string;
 };
 
 export async function createPostAction(

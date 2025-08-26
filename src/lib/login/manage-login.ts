@@ -4,6 +4,11 @@ import { SignJWT, jwtVerify } from 'jose';
 import { redirect } from 'next/navigation';
 
 const jwtsecretKey = process.env.JWT_SECRET_KEY;
+
+if (!jwtsecretKey) {
+  console.log('A variável de ambiente JWT_SECRET_KEY não está definida.');
+}
+
 const jwtEncodedKey = new TextEncoder().encode(jwtsecretKey);
 
 const loginExpSeconds = Number(process.env.LOGIN_EXPIRATION_SECONDS) || 86400;
@@ -41,7 +46,7 @@ export async function createLoginSession(username: string) {
 
 export async function deleteLoginSession() {
   const cookieStore = await cookies();
-  cookieStore.set(loginCookieName, '', { expires: new Date(0) });
+  // cookieStore.set(loginCookieName, '', { expires: new Date(0) });
   cookieStore.delete(loginCookieName);
 }
 

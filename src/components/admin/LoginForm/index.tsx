@@ -26,7 +26,6 @@ export function LoginForm() {
     <div
       className={clsx(
         'flex items-center justify-center',
-
         'text-center max-w-sm mt-16 mb-32 mx-auto',
       )}
     >
@@ -47,10 +46,12 @@ export function LoginForm() {
           placeholder='Sua senha'
           disabled={isPending}
         />
+
         <Button disabled={isPending} type='submit' className='mt-4'>
           <LogInIcon />
           Entrar
         </Button>
+
         {!!state.error && <p className='text-red-600'>{state.error}</p>}
       </form>
     </div>

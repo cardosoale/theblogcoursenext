@@ -1,5 +1,6 @@
 'use server';
 
+import { verifyLoginSession } from '@/lib/login/manage-login';
 import { mkdir, writeFile } from 'fs/promises';
 import { extname, resolve } from 'path';
 
@@ -11,12 +12,17 @@ type uploadImageActionResult = {
 export async function uploadImageAction(
   formdata: FormData,
 ): Promise<uploadImageActionResult> {
-  const makeResult = ({ url = '', error = '' }) => {
-    return {
-      url,
-      error,
-    };
-  };
+  const makeResult = ({ url = '', error = '' }) => ({ url, error });
+
+  const isAuthenticated = await verifyLoginSession();
+
+  if (!isAuthenticated) {
+    return makeResult({ error: ' login novamente' });
+  }
+
+  if (!(formdata instanceof FormData)) {
+    return makeResult({ error: 'Dados inválidos' });
+  }
 
   const file = formdata.get('file');
 

@@ -1,4 +1,4 @@
-import type { NextConfig } from "next";
+import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
   images: {
@@ -17,6 +17,15 @@ const nextConfig: NextConfig = {
         pathname: '/**',
         search: '',
       },
+
+      // TODO LIBERAR NO SERVIDOR HTTPS
+      // {
+      //   protocol: 'https',
+      //   hostname: 'example.com.br',
+      //   port: '',
+      //   pathname: '/**',
+      //   search: '',
+      // },
     ],
   },
 };
